@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productivity Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://kit.fontawesome.com/a2e0c6fa03.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+<!-- Top Bar -->
+<header class="top-bar">
+  <div>
+    <h1>Good Morning, Rovel</h1>
+    <p id="currentDateTime"></p>
+  </div>
+  <button id="toggleDarkMode" class="mode-toggle" aria-label="Toggle Light/Dark Mode" title="Toggle Light/Dark Mode">
+    <i class="fas fa-moon"></i>
+  </button>
+</header>
+
+  <!-- Main Dashboard Grid -->
+  <main class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 p-4">
+
+    <!-- Sticky Notes -->
+<section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+  <h2 class="text-lg font-semibold mb-2">Sticky Notes</h2>
+  <div id="stickyNotesContainer" class="space-y-4"></div>
+  <button id="addStickyNoteBtn" class="mt-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-3 py-1 rounded">+ Add Note</button>
+</section>
+
+    <!-- Today's Schedule -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">Today's Schedule</h2>
+      <ul id="scheduleList" class="space-y-2"></ul>
+
+      <!-- Inline Schedule Add Form (hidden by default) -->
+      <form id="scheduleForm" class="hidden flex flex-col space-y-2 mt-2 bg-gray-50 dark:bg-gray-700 p-3 rounded">
+        <input type="text" id="scheduleTime" placeholder="Enter time (e.g., 10:00 AM)" class="p-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white" />
+        <input type="text" id="scheduleTask" placeholder="Enter task" class="p-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white" />
+        <div class="flex justify-end gap-2">
+          <button type="button" id="scheduleAddBtn" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Add</button>
+          <button type="button" id="scheduleCancelBtn" class="bg-gray-300 dark:bg-gray-600 px-3 py-1 rounded hover:bg-gray-400 dark:hover:bg-gray-500">Cancel</button>
+        </div>
+      </form>
+
+      <!-- Show Schedule Form Button -->
+      <button id="showScheduleFormBtn" class="mt-2 text-blue-500 hover:underline">+ Add Task</button>
+    </section>
+
+    <!-- Countdown Timers -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">Countdown Timers</h2>
+      <ul id="countdownList" class="space-y-2"></ul>
+
+      <!-- Inline Countdown Add Form (hidden by default) -->
+      <form id="countdownForm" class="hidden flex flex-col space-y-2 mt-2 bg-gray-50 dark:bg-gray-700 p-3 rounded">
+        <input type="text" id="countdownLabel" placeholder="Timer label" class="p-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white" />
+        <input type="number" id="countdownMinutes" placeholder="Minutes" class="p-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white" min="1" />
+        <div class="flex justify-end gap-2">
+          <button type="button" id="countdownAddBtn" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Add</button>
+          <button type="button" id="countdownCancelBtn" class="bg-gray-300 dark:bg-gray-600 px-3 py-1 rounded hover:bg-gray-400 dark:hover:bg-gray-500">Cancel</button>
+        </div>
+      </form>
+
+      <!-- Show Countdown Form Button -->
+      <button id="showCountdownFormBtn" class="mt-2 text-blue-500 hover:underline">+ Add Timer</button>
+    </section>
+
+    <!-- Routine Tracker -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">Routine Tracker</h2>
+      <ul id="routineList" class="space-y-2">
+        <li><label><input type="checkbox" class="mr-2">Drink Water</label></li>
+        <li><label><input type="checkbox" class="mr-2">Stretch</label></li>
+        <li><label><input type="checkbox" class="mr-2">Work Session</label></li>
+      </ul>
+    </section>
+
+    <!-- Quick Notes -->
+    <section class="col-span-1 xl:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">Quick Notes</h2>
+      <textarea id="quickNotes" class="w-full h-40 p-2 rounded bg-gray-100 dark:bg-gray-700"></textarea>
+      <div class="mt-2 text-sm text-right text-gray-500">Autosaved</div>
+    </section>
+
+    <!-- Pomodoro Timer -->
+    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">Pomodoro Timer</h2>
+      <div class="text-4xl font-bold text-center" id="pomodoroTimer">25:00</div>
+      <div class="flex justify-center gap-4 mt-4">
+        <button onclick="startPomodoro()" class="bg-green-500 text-white px-4 py-2 rounded">Start</button>
+        <button onclick="resetPomodoro()" class="bg-red-500 text-white px-4 py-2 rounded">Reset</button>
+      </div>
+    </section>
+
+    <section class="calendar-container bg-white dark:bg-gray-800 rounded-2xl shadow p-4">
+  <h2 class="calendar-title text-lg font-semibold mb-4">Calendar</h2>
+  <div id="calendar" class="calendar-grid w-full"></div>
+</section>
+
+
+  </main>
+
+  <script>
+    // Live Clock
+    function updateDateTime() {
+      const now = new Date();
+      document.getElementById('currentDateTime').textContent = now.toLocaleString();
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Dark Mode
+    document.getElementById('toggleDarkMode').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+    });
+
+    // Notes
+    const notesArea = document.getElementById('quickNotes');
+    notesArea.value = localStorage.getItem('quickNotes') || '';
+    notesArea.addEventListener('input', () => {
+      localStorage.setItem('quickNotes', notesArea.value);
+    });
+
+    // Schedule
+    const scheduleList = document.getElementById('scheduleList');
+    function saveSchedule() {
+      const items = Array.from(scheduleList.children).map(item => item.querySelector('span').textContent);
+      localStorage.setItem('scheduleItems', JSON.stringify(items));
+    }
+    function loadSchedule() {
+      const items = JSON.parse(localStorage.getItem('scheduleItems') || '[]');
+      items.forEach(text => {
+        const item = createScheduleItem(text);
+        scheduleList.appendChild(item);
+      });
+    }
+    function createScheduleItem(text) {
+      const li = document.createElement('li');
+      li.className = "flex justify-between items-center bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded hover:bg-yellow-100 dark:hover:bg-yellow-700";
+      const span = document.createElement('span');
+      span.textContent = text;
+      li.appendChild(span);
+      const remove = document.createElement('button');
+      remove.innerHTML = '&times;';
+      remove.className = "text-red-500 hover:text-red-700 font-bold text-lg";
+      remove.onclick = () => {
+        li.remove();
+        saveSchedule();
+      };
+      li.appendChild(remove);
+      return li;
+    }
+
+    // Replace old addScheduleItem with empty function (not used anymore)
+    function addScheduleItem() {}
+
+    // Schedule Form Elements and Handlers
+    const showScheduleFormBtn = document.getElementById('showScheduleFormBtn');
+    const scheduleForm = document.getElementById('scheduleForm');
+    const scheduleTimeInput = document.getElementById('scheduleTime');
+    const scheduleTaskInput = document.getElementById('scheduleTask');
+    const scheduleAddBtn = document.getElementById('scheduleAddBtn');
+    const scheduleCancelBtn = document.getElementById('scheduleCancelBtn');
+
+    showScheduleFormBtn.addEventListener('click', () => {
+      scheduleForm.classList.remove('hidden');
+      showScheduleFormBtn.classList.add('hidden');
+      scheduleTimeInput.focus();
+    });
+
+    scheduleCancelBtn.addEventListener('click', () => {
+      scheduleForm.classList.add('hidden');
+      showScheduleFormBtn.classList.remove('hidden');
+      scheduleTimeInput.value = '';
+      scheduleTaskInput.value = '';
+    });
+
+    scheduleAddBtn.addEventListener('click', () => {
+      const time = scheduleTimeInput.value.trim();
+      const task = scheduleTaskInput.value.trim();
+      if (!time || !task) {
+        alert('Please enter both time and task');
+        return;
+      }
+      const text = `${time} - ${task}`;
+      const item = createScheduleItem(text);
+      scheduleList.appendChild(item);
+      saveSchedule();
+      scheduleTimeInput.value = '';
+      scheduleTaskInput.value = '';
+      scheduleForm.classList.add('hidden');
+      showScheduleFormBtn.classList.remove('hidden');
+    });
+
+    loadSchedule();
+
+    // Countdown Timers
+    const countdownList = document.getElementById('countdownList');
+
+    // Timer data structure: {label, minutes, remainingSeconds, intervalId}
+    let timers = [];
+
+    function saveTimers() {
+      const simpleTimers = timers.map(t => ({label: t.label, minutes: t.minutes}));
+      localStorage.setItem('countdownTimers', JSON.stringify(simpleTimers));
+    }
+
+    function loadTimers() {
+      const saved = JSON.parse(localStorage.getItem('countdownTimers') || '[]');
+      saved.forEach(t => {
+        createTimer(t.label, t.minutes);
+      });
+    }
+
+    function createTimer(label, minutes) {
+      const li = document.createElement('li');
+      li.className = "flex justify-between items-center bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded";
+
+      const timerLabel = document.createElement('span');
+      timerLabel.textContent = label;
+      li.appendChild(timerLabel);
+
+      const timerTime = document.createElement('span');
+      timerTime.textContent = formatTime(minutes * 60);
+      timerTime.className = "font-mono mx-2 w-20 text-center";
+      li.appendChild(timerTime);
+
+      const controls = document.createElement('div');
+      controls.className = "flex gap-1";
+
+      const startBtn = document.createElement('button');
+      startBtn.innerHTML = '<i class="fas fa-play"></i>';
+      startBtn.title = 'Start';
+      startBtn.className = 'text-green-600 hover:text-green-800';
+      controls.appendChild(startBtn);
+
+      const pauseBtn = document.createElement('button');
+      pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      pauseBtn.title = 'Pause';
+      pauseBtn.className = 'text-yellow-600 hover:text-yellow-800';
+      controls.appendChild(pauseBtn);
+
+      const resetBtn = document.createElement('button');
+      resetBtn.innerHTML = '<i class="fas fa-undo"></i>';
+      resetBtn.title = 'Reset';
+      resetBtn.className = 'text-red-600 hover:text-red-800';
+      controls.appendChild(resetBtn);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerHTML = '&times;';
+      removeBtn.title = 'Remove';
+      removeBtn.className = 'text-gray-600 hover:text-gray-900 dark:hover:text-white font-bold text-lg';
+      controls.appendChild(removeBtn);
+
+      li.appendChild(controls);
+
+      countdownList.appendChild(li);
+
+      let remainingSeconds = minutes * 60;
+      let intervalId = null;
+
+      function updateDisplay() {
+        timerTime.textContent = formatTime(remainingSeconds);
+      }
+
+      function startTimer() {
+        if (intervalId) return; // already running
+        intervalId = setInterval(() => {
+          if (remainingSeconds > 0) {
+            remainingSeconds--;
+            updateDisplay();
+          } else {
+            clearInterval(intervalId);
+            intervalId = null;
+            alert(`Timer "${label}" finished!`);
+          }
+        }, 1000);
+      }
+
+      function pauseTimer() {
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+      }
+
+      function resetTimer() {
+        pauseTimer();
+        remainingSeconds = minutes * 60;
+        updateDisplay();
+      }
+
+      startBtn.addEventListener('click', startTimer);
+      pauseBtn.addEventListener('click', pauseTimer);
+      resetBtn.addEventListener('click', resetTimer);
+      removeBtn.addEventListener('click', () => {
+        pauseTimer();
+        timers = timers.filter(t => t.li !== li);
+        li.remove();
+        saveTimers();
+      });
+
+      // Store timer object for saving/loading
+      timers.push({label, minutes, li, intervalId, startTimer, pauseTimer, resetTimer});
+
+      updateDisplay();
+      saveTimers();
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    // Replace old addCountdownTimer with empty (no prompt)
+    function addCountdownTimer() {}
+
+    // Countdown Form Elements and Handlers
+    const showCountdownFormBtn = document.getElementById('showCountdownFormBtn');
+    const countdownForm = document.getElementById('countdownForm');
+    const countdownLabelInput = document.getElementById('countdownLabel');
+    const countdownMinutesInput = document.getElementById('countdownMinutes');
+    const countdownAddBtn = document.getElementById('countdownAddBtn');
+    const countdownCancelBtn = document.getElementById('countdownCancelBtn');
+
+    showCountdownFormBtn.addEventListener('click', () => {
+      countdownForm.classList.remove('hidden');
+      showCountdownFormBtn.classList.add('hidden');
+      countdownLabelInput.focus();
+    });
+
+    countdownCancelBtn.addEventListener('click', () => {
+      countdownForm.classList.add('hidden');
+      showCountdownFormBtn.classList.remove('hidden');
+      countdownLabelInput.value = '';
+      countdownMinutesInput.value = '';
+    });
+
+    countdownAddBtn.addEventListener('click', () => {
+      const label = countdownLabelInput.value.trim();
+      const minutes = parseInt(countdownMinutesInput.value.trim());
+      if (!label || isNaN(minutes) || minutes < 1) {
+        alert('Please enter a valid label and minutes (at least 1).');
+        return;
+      }
+      createTimer(label, minutes);
+      countdownLabelInput.value = '';
+      countdownMinutesInput.value = '';
+      countdownForm.classList.add('hidden');
+      showCountdownFormBtn.classList.remove('hidden');
+    });
+
+    loadTimers();
+
+    // Pomodoro Timer Logic
+    let pomodoroSeconds = 25 * 60;
+    let pomodoroInterval = null;
+    const pomodoroDisplay = document.getElementById('pomodoroTimer');
+
+    function updatePomodoroDisplay() {
+      pomodoroDisplay.textContent = formatTime(pomodoroSeconds);
+    }
+
+    function startPomodoro() {
+      if (pomodoroInterval) return;
+      pomodoroInterval = setInterval(() => {
+        if (pomodoroSeconds > 0) {
+          pomodoroSeconds--;
+          updatePomodoroDisplay();
+        } else {
+          clearInterval(pomodoroInterval);
+          pomodoroInterval = null;
+          alert('Pomodoro session ended!');
+          pomodoroSeconds = 25 * 60;
+          updatePomodoroDisplay();
+        }
+      }, 1000);
+    }
+
+    function resetPomodoro() {
+      clearInterval(pomodoroInterval);
+      pomodoroInterval = null;
+      pomodoroSeconds = 25 * 60;
+      updatePomodoroDisplay();
+    }
+
+    updatePomodoroDisplay();
+
+    // Sticky Notes Feature
+const stickyNotesContainer = document.getElementById('stickyNotesContainer');
+const addStickyNoteBtn = document.getElementById('addStickyNoteBtn');
+
+let stickyNotes = [];
+
+// Load saved sticky notes from localStorage
+function loadStickyNotes() {
+  const savedNotes = JSON.parse(localStorage.getItem('stickyNotes') || '[]');
+  stickyNotes = savedNotes;
+  stickyNotesContainer.innerHTML = '';
+  stickyNotes.forEach(note => {
+    createStickyNoteElement(note.id, note.text);
+  });
+}
+
+// Save current sticky notes array to localStorage
+function saveStickyNotes() {
+  localStorage.setItem('stickyNotes', JSON.stringify(stickyNotes));
+}
+
+// Create sticky note DOM element with id and text
+function createStickyNoteElement(id, text = '') {
+  const noteDiv = document.createElement('div');
+  noteDiv.className = 'bg-yellow-100 dark:bg-yellow-700 p-3 rounded shadow relative';
+  noteDiv.style.minHeight = '100px';
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.className = 'w-full h-24 resize-none bg-transparent border-none focus:outline-none dark:text-gray-900';
+  textarea.placeholder = 'Type your note here...';
+
+  // Update stickyNotes array on input
+  textarea.addEventListener('input', () => {
+    const index = stickyNotes.findIndex(n => n.id === id);
+    if (index !== -1) {
+      stickyNotes[index].text = textarea.value;
+      saveStickyNotes();
+    }
+  });
+
+  // Remove button
+  const removeBtn = document.createElement('button');
+  removeBtn.innerHTML = '&times;';
+  removeBtn.className = 'absolute top-1 right-2 text-red-600 hover:text-red-900 font-bold text-xl';
+  removeBtn.title = 'Remove Note';
+  removeBtn.addEventListener('click', () => {
+    stickyNotes = stickyNotes.filter(n => n.id !== id);
+    saveStickyNotes();
+    noteDiv.remove();
+  });
+
+  noteDiv.appendChild(removeBtn);
+  noteDiv.appendChild(textarea);
+  stickyNotesContainer.appendChild(noteDiv);
+}
+
+// Add new sticky note with unique ID
+function addStickyNote() {
+  const id = Date.now(); // simple unique id based on timestamp
+  stickyNotes.push({ id, text: '' });
+  saveStickyNotes();
+  createStickyNoteElement(id, '');
+}
+
+addStickyNoteBtn.addEventListener('click', addStickyNote);
+
+// Initialize sticky notes on page load
+loadStickyNotes();
+
+function createCalendar(elemId) {
+  const calendarElem = document.getElementById(elemId);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  // Get first day of month (0=Sun, 6=Sat)
+  const firstDay = new Date(year, month, 1).getDay();
+  // Number of days in month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = '';
+
+  // Weekday headers
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  days.forEach(day => {
+    html += `<div class="weekday">${day}</div>`;
+  });
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    html += `<div class="empty"></div>`;
+  }
+
+  // Days of the month
+  for (let d = 1; d <= daysInMonth; d++) {
+    html += `<div class="day">${d}</div>`;
+  }
+
+  calendarElem.innerHTML = html;
+}
+
+// Initialize calendar on DOMContentLoaded or call this after your page loads
+document.addEventListener('DOMContentLoaded', () => {
+  createCalendar('calendar');
+});
+
+  </script>
+</body>
+</html>

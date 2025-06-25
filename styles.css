@@ -1,0 +1,10 @@
+/* styles.css - imports all CSS parts */
+@import url('css/base.css');
+@import url('css/header.css');
+@import url('css/layout.css');
+@import url('css/cards.css');
+@import url('css/quicknotes.css');
+@import url('css/buttons.css');
+@import url('css/pomodoro.css');
+@import url('css/routine.css');
+@import url('css/schedule.css');

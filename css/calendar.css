@@ -1,0 +1,43 @@
+.calendar-container {
+  /* Matches the style of your quick notes container */
+  /* background, border radius, padding, shadow already set in class */
+}
+
+.calendar-title {
+  /* Title styles */
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem; /* Tailwind's gap-1 */
+  text-align: center;
+}
+
+.calendar-grid > div {
+  padding: 0.5rem;
+  border-radius: 0.375rem; /* rounded */
+  cursor: default;
+  user-select: none;
+}
+
+.calendar-grid > div:hover {
+  background-color: #bfdbfe; /* Tailwind's blue-200 */
+  cursor: pointer;
+}
+
+/* Weekday header style */
+.calendar-grid > div.weekday {
+  font-weight: 700;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  cursor: default;
+  background: transparent;
+}
+
+/* Empty grid cells */
+.calendar-grid > div.empty {
+  cursor: default;
+  background: transparent;
+  pointer-events: none;
+}

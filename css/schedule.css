@@ -1,0 +1,10 @@
+/* schedule.css */
+
+#scheduleList li.highlighted {
+  background-color: #fde68a; /* Tailwind yellow-300 */
+  transition: background-color 0.3s;
+}
+
+body.dark #scheduleList li.highlighted {
+  background-color: #92400e; /* darker yellow */
+}

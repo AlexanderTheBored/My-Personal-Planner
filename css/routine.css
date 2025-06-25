@@ -1,0 +1,9 @@
+/* routine.css */
+
+#routineList li {
+  margin-bottom: 0.5rem;
+}
+
+#routineList label {
+  cursor: pointer;
+}

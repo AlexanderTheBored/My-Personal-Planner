@@ -1,0 +1,42 @@
+/* base.css */
+
+/* Root colors for light and dark mode */
+:root {
+  --bg-light: #f9fafb;
+  --text-light: #1f2937;
+  --bg-dark: #1f2937;
+  --text-dark: #f9fafb;
+
+  --bg-white-light: #ffffff;
+  --bg-white-dark: #2d3748;
+
+  --hover-yellow-light: #fef3c7;
+  --hover-yellow-dark: #78350f;
+
+  --hover-blue-light: #dbeafe;
+  --hover-blue-dark: #1e40af;
+
+  --red-light: #ef4444;
+  --red-dark: #b91c1c;
+
+  --green-light: #22c55e;
+  --green-dark: #15803d;
+
+  --red-button-bg: #ef4444;
+  --green-button-bg: #22c55e;
+}
+
+/* Dark mode toggle */
+body {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0;
+  padding: 0;
+}
+
+body.dark {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}

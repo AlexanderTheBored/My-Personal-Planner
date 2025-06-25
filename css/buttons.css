@@ -1,0 +1,17 @@
+/* buttons.css */
+
+button {
+  cursor: pointer;
+  background-color: var(--green-light);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #15803d; /* Tailwind green-700 */
+}
